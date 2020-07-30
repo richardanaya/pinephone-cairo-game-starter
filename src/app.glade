@@ -16,10 +16,17 @@
       <placeholder/>
     </child>
     <child>
-      <object class="GtkDrawingArea" id="canvas">
-        <property name="name">canvas</property>
+      <object class="GtkEventBox" id="event_box">
+        <property name="name">event_box</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <child>
+          <object class="GtkDrawingArea" id="canvas">
+            <property name="name">canvas</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>

@@ -7,7 +7,8 @@ This repo is a starter for creating a cairo based game in Rust for PinePhone
 Check out commands in my `Makefile` or simply run `make`.
 
 Notice how I compile glade and images into a single `.gresource` file, this let's me embed 
-the bytes of all the things my app needs into my Rust app.
+the bytes of all the things my app needs into my Rust app. We rely on the tool `glib-compile-resources` 
+putting our game resources in a single binary.
 
 Currently I compile this on my desktop for quick iteration and my phone to test out.
 
