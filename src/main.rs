@@ -3,7 +3,13 @@ use std::f64::consts::PI;
 
 mod setup;
 
+struct Game {
+    x:f64,
+    y:f64,
+}
+
 fn main() {
+    let g = Game{x:0.0,y:0.0};
     setup::run_game(|ctx, touch| {
         let mut rng = rand::thread_rng();
         ctx.scale(400f64, 400f64);

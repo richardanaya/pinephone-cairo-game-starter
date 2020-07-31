@@ -4,14 +4,14 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 pub struct Input {
-    pub x: u32,
-    pub y: u32,
+    pub x: f64,
+    pub y: f64,
     pub is_down: bool,
 }
 
 pub fn run_game<T>(run: T)
 where
-    T: 'static + Fn(&Context, &Input),
+    T: 'static + Fn(&Context, &Input, (i32,i32)),
 {
     if gtk::init().is_err() {
         println!("Failed to initialize GTK.");
@@ -34,29 +34,36 @@ where
         Rc::new(RefCell::new(builder.get_object("canvas").unwrap()));
 
     let input = Rc::new(RefCell::new(Input {
-        x: 0,
-        y: 0,
+        x: 0.0,
+        y: 0.0,
         is_down: false,
     }));
 
     let input2 = input.clone();
+    let canvas2 = canvas;
     // handle draw and use cairo context
     canvas.borrow_mut().connect_draw(move |_, ctx| {
-        run(ctx, &input2.borrow());
+        run(ctx, &input2.borrow(),(canvas2.get_allocated_width(),canvas2.get_allocated_height()));
         Inhibit(false)
     });
 
-    let input3 = input.clone();
+    let input3 = input.clone(); 
     event_box.connect_button_press_event(move |_, e| {
         let mut inp = input3.borrow_mut();
+        let pos = e.get_coords().unwrap();
         inp.is_down = true;
+        inp.x = pos.0;
+        inp.y = pos.1;
         Inhibit(false)
     });
 
     let input4 = input.clone();
     event_box.connect_button_release_event(move |_, e| {
         let mut inp = input4.borrow_mut();
+        let pos = e.get_coords().unwrap();
         inp.is_down = false;
+        inp.x = pos.0;
+        inp.y = pos.1;
         Inhibit(false)
     });
 
