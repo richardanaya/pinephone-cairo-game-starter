@@ -1,32 +1,24 @@
-use rand::Rng;
 use std::f64::consts::PI;
-
-mod setup;
+mod engine;
 
 struct Game {
-    x:f64,
-    y:f64,
+    x: f64,
+    y: f64,
 }
 
 fn main() {
-    let g = Game{x:0.0,y:0.0};
-    setup::run_game(|ctx, touch| {
-        let mut rng = rand::thread_rng();
-        ctx.scale(400f64, 400f64);
-        let rgb = (rng.gen(), rng.gen(), rng.gen());
-        ctx.set_source_rgba(rgb.0, rgb.1, rgb.2, 0.6);
-        ctx.arc(0.40, 0.53, 0.2, 0.0, PI * 2.);
-        ctx.fill();
-
-        if touch.is_down {
-            let rgb = (rng.gen(), rng.gen(), rng.gen());
-            ctx.set_source_rgba(rgb.0, rgb.1, rgb.2, 0.6);
-            ctx.arc(0.5, 0.65, 0.2, 0.0, PI * 2.);
-            ctx.fill();
-            let rgb = (rng.gen(), rng.gen(), rng.gen());
-            ctx.set_source_rgba(rgb.0, rgb.1, rgb.2, 0.6);
-            ctx.arc(0.6, 0.53, 0.2, 0.0, PI * 2.);
-            ctx.fill();
+    engine::load_resources();
+    let g = Game { x: 0.0, y: 0.0 };
+    let s = engine::image_from_resource("/app/ball.png");
+    engine::run_game(move |window, ctx, pointer| {
+        if pointer.is_down {
+            ctx.set_source_rgba(0.0, 1.0,0.0, 1.0);
+        } else {
+            ctx.set_source_rgba(1.0, 0.0,0.0, 1.0);
         }
+        ctx.arc(window.width/2.0, window.height/2.0, window.width/6.0, 0.0, PI * 2.);
+        ctx.fill();
+        ctx.set_source_surface(&s,0.0,0.0);
+        ctx.paint();
     });
 }
