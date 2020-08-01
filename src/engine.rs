@@ -1,8 +1,8 @@
-use cairo::{Context,ImageSurface,Format,ImageSurfaceData};
+use cairo::{Context, Format, ImageSurface, ImageSurfaceData};
+use gdk_pixbuf::*;
 use gtk::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
-use gdk_pixbuf::*;
 
 pub struct GameWindow {
     pub width: f64,
@@ -15,22 +15,31 @@ pub struct Input {
     pub is_down: bool,
 }
 
-pub fn load_resources(){
-      // we embed our image,glade file, and css  in a glib gresource file generated
+pub fn load_resources() {
+    // we embed our image,glade file, and css  in a glib gresource file generated
     //  from app.xml, let's load it in from bytes embedded in our app
     let bytes = glib::Bytes::from_static(include_bytes!("app.gresource"));
     let res = gio::Resource::from_data(&bytes).unwrap();
     gio::resources_register(&res);
 }
 
-pub fn image_from_resource(path:&str) -> ImageSurface{
+pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
     let mut pixels = unsafe { pb.get_pixels().to_owned() };
-    let mut img = ImageSurface::create(if pb.get_has_alpha() { Format::ARgb32 } else { Format::Rgb24 },pb.get_width(),pb.get_height()).unwrap();
+    let mut img = ImageSurface::create(
+        if pb.get_has_alpha() {
+            Format::ARgb32
+        } else {
+            Format::Rgb24
+        },
+        pb.get_width(),
+        pb.get_height(),
+    )
+    .unwrap();
     {
-        let mut d:ImageSurfaceData = img.get_data().unwrap();
+        let mut d: ImageSurfaceData = img.get_data().unwrap();
         let data = &mut d;
-        for i in 0..data.len() { 
+        for i in 0..data.len() {
             data[i] = pixels[i];
         }
     }
@@ -91,6 +100,15 @@ where
         let mut inp = input4.borrow_mut();
         let pos = e.get_coords().unwrap();
         inp.is_down = false;
+        inp.x = pos.0;
+        inp.y = pos.1;
+        Inhibit(false)
+    });
+
+    let input5 = input.clone();
+    event_box.connect_motion_notify_event(move |_, e| {
+        let mut inp = input5.borrow_mut();
+        let pos = e.get_coords().unwrap();
         inp.x = pos.0;
         inp.y = pos.1;
         Inhibit(false)
