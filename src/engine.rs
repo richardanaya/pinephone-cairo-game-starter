@@ -135,7 +135,7 @@ where
             },
             ctx,
             &input2.borrow(),
-            1_f64 / 60_f64,
+            1_f64 / 30_f64,
         );
         Inhibit(false)
     });
@@ -160,12 +160,18 @@ where
         Inhibit(false)
     });
 
-    let input5 = input;
+    let input5 = input.clone();
     event_box.connect_motion_notify_event(move |_, e| {
         let mut inp = input5.borrow_mut();
         let pos = e.get_coords().unwrap();
         inp.x = pos.0;
         inp.y = pos.1;
+        Inhibit(false)
+    });
+
+    let input6 = input;
+    event_box.connect_event(move |_, e| {
+        println!("{:?}",e);
         Inhibit(false)
     });
 
@@ -183,8 +189,8 @@ where
         glib::Continue(true)
     };
 
-    // executes the game every 60 seconds
-    gtk::timeout_add(1000 / 60, tick);
+    // executes the game every 30 seconds
+    gtk::timeout_add(1000 / 30, tick);
 
     gtk::main();
 }
