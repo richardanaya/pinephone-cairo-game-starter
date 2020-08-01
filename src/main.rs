@@ -41,8 +41,8 @@ fn main() {
         player_paddle_y: 0.0,
         ball_x: 0.0,
         ball_y: 0.0,
-        ball_vel_x: engine::random() * 100.0 - 5.0,
-        ball_vel_y: 100.0,
+        ball_vel_x: engine::random() * 400.0 - 200.0,
+        ball_vel_y: 200.0 * engine::random_sign(),
     }));
 
     let img_ball = engine::image_from_resource("/app/ball.png");
@@ -62,9 +62,14 @@ fn main() {
 
         g.ball_x += g.ball_vel_x * delta_time;
         g.ball_y += g.ball_vel_y * delta_time;
+        g.opponent_paddle_x = g.ball_x;
 
         if g.ball_y < 50.0 || g.ball_y > window.height - 50.0 {
             g.ball_vel_y *= -1.0;
+        }
+
+        if g.ball_x < 0.0 || g.ball_x > window.width {
+            g.ball_vel_x *= -1.0;
         }
 
         clear_screen(ctx, 1.0, 1.0, 1.0);

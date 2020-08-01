@@ -29,6 +29,15 @@ pub fn random() -> f64 {
     rng.gen()
 }
 
+pub fn random_sign() -> f64 {
+    let s = random() - 0.5;
+    if s < 0.0 {
+        -1.0
+    } else {
+        1.0
+    }
+}
+
 pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
     let pixels = unsafe { pb.get_pixels().to_owned() };
