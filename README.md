@@ -2,6 +2,23 @@
 
 This repo is a starter for creating a cairo based game in Rust for PinePhone
 
+# Example
+
+```rust
+engine::init();
+
+let img_non_touched = engine::image_from_resource("/app/non_touched.png");
+let img_touched = engine::image_from_resource("/app/touched.png");
+
+engine::run_game(move |window, ctx, pointer, delta_time| {
+    if pointer.is_down() {
+      engine::draw_image_centered(ctx,window.width/2.0,window.height/2.0,img_touched);
+    } else {
+      engine::draw_image_centered(ctx,window.width/2.0,window.height/2.0,img_non_touched);
+    }
+});
+```
+
 ## Compilation
 
 Check out commands in my `Makefile` or simply run `make`.
