@@ -2,6 +2,8 @@
 
 This repo is a starter for creating a cairo based game in Rust for PinePhone
 
+![](screenshots/screenshot0.png)
+
 # Example
 
 ```rust
