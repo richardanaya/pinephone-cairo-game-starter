@@ -41,12 +41,9 @@ pub fn random_sign() -> f64 {
 pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
     let pixels = unsafe { pb.get_pixels().to_owned() };
+    let has_alpha = pb.get_has_alpha();
     let mut img = ImageSurface::create(
-        if pb.get_has_alpha() {
-            Format::ARgb32
-        } else {
-            Format::Rgb24
-        },
+        Format::ARgb32,
         pb.get_width(),
         pb.get_height(),
     )
@@ -54,8 +51,34 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
     {
         let mut d: ImageSurfaceData = img.get_data().unwrap();
         let data = &mut d;
-        for i in 0..pixels.len() {
-            data[i] = pixels[i];
+        let w = pb.get_width();
+        for x in 0..w{
+            for y in 0..pb.get_height() {
+                if has_alpha {
+                    let sp = ((y*w+x)*4) as usize;
+                    let r = pixels[sp];
+                    let g = pixels[sp+1];
+                    let b = pixels[sp+2];
+                    let a = pixels[sp+3];
+                    let p = ((y*w+x)*4) as usize;
+                    data[p] = b;
+                    data[p+1] = g;
+                    data[p+2] = r;
+                    data[p+3] = a;
+                }
+                else {
+                    // TODO, there's a bug with pngs without transparency... not sure where..
+                    let sp = ((y*w+x)*3) as usize;
+                    let r = pixels[sp];
+                    let g = pixels[sp+1];
+                    let b = pixels[sp+2];
+                    let p = ((y*w+x)*4) as usize;
+                    data[p] = b;
+                    data[p+1] = g;
+                    data[p+2] = r;
+                    data[p+3] = 255;
+                }
+            }  
         }
     }
     img
