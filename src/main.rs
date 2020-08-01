@@ -1,4 +1,3 @@
-use std::f64::consts::PI;
 mod engine;
 use cairo::{Context, ImageSurface};
 use std::cell::RefCell;
@@ -23,14 +22,17 @@ fn clear_screen(ctx: &Context, r: f64, g: f64, b: f64) {
 
 fn draw_image_centered(ctx: &Context, x: f64, y: f64, img: &ImageSurface) {
     ctx.save();
-    ctx.translate(x-(img.get_width()/2) as f64,y-(img.get_height()/2) as f64);
+    ctx.translate(
+        x - (img.get_width() / 2) as f64,
+        y - (img.get_height() / 2) as f64,
+    );
     ctx.set_source_surface(img, 0.0, 0.0);
     ctx.paint();
     ctx.restore();
 }
 
 fn main() {
-    engine::load_resources();
+    engine::init();
     let game = Rc::new(RefCell::new(Game {
         init: false,
         opponent_paddle_x: 0.0,
@@ -39,7 +41,7 @@ fn main() {
         player_paddle_y: 0.0,
         ball_x: 0.0,
         ball_y: 0.0,
-        ball_vel_x: 0.0,
+        ball_vel_x: engine::random() * 100.0 - 5.0,
         ball_vel_y: 100.0,
     }));
 
@@ -56,6 +58,13 @@ fn main() {
             g.ball_x = window.width / 2.0;
             g.ball_y = window.height / 2.0;
             g.init = true;
+        }
+
+        g.ball_x += g.ball_vel_x * delta_time;
+        g.ball_y += g.ball_vel_y * delta_time;
+
+        if g.ball_y < 50.0 || g.ball_y > window.height - 50.0 {
+            g.ball_vel_y *= -1.0;
         }
 
         clear_screen(ctx, 1.0, 1.0, 1.0);

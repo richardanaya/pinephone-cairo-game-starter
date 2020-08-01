@@ -1,6 +1,7 @@
 use cairo::{Context, Format, ImageSurface, ImageSurfaceData};
 use gdk_pixbuf::*;
 use gtk::prelude::*;
+use rand::Rng;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -15,7 +16,7 @@ pub struct Input {
     pub is_down: bool,
 }
 
-pub fn load_resources() {
+pub fn init() {
     // we embed our image,glade file, and css  in a glib gresource file generated
     //  from app.xml, let's load it in from bytes embedded in our app
     let bytes = glib::Bytes::from_static(include_bytes!("app.gresource"));
@@ -23,9 +24,14 @@ pub fn load_resources() {
     gio::resources_register(&res);
 }
 
+pub fn random() -> f64 {
+    let mut rng = rand::thread_rng();
+    rng.gen()
+}
+
 pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
-    let mut pixels = unsafe { pb.get_pixels().to_owned() };
+    let pixels = unsafe { pb.get_pixels().to_owned() };
     let mut img = ImageSurface::create(
         if pb.get_has_alpha() {
             Format::ARgb32
@@ -81,7 +87,7 @@ where
             },
             ctx,
             &input2.borrow(),
-            1 as f64 / 60 as f64,
+            1_f64 / 60_f64,
         );
         Inhibit(false)
     });
@@ -106,7 +112,7 @@ where
         Inhibit(false)
     });
 
-    let input5 = input.clone();
+    let input5 = input;
     event_box.connect_motion_notify_event(move |_, e| {
         let mut inp = input5.borrow_mut();
         let pos = e.get_coords().unwrap();
@@ -123,7 +129,7 @@ where
     #[cfg(not(debug_assertions))]
     window.maximize();
 
-    let canvas2 = canvas.clone();
+    let canvas2 = canvas;
     let tick = move || {
         canvas2.borrow_mut().queue_draw();
         glib::Continue(true)
