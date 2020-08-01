@@ -183,5 +183,10 @@ where
         Inhibit(false)
     });
 
+    window.connect_event(|_,e|{
+        println!("{:?}",e);
+        Inhibit(false)
+    });
+
     gtk::main();
 }
