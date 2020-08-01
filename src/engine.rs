@@ -178,15 +178,10 @@ where
     gtk::timeout_add(1000 / 30, tick);
 
     // exit properly if our window is closing
-    window.connect_destroy_event(|_,_|{
+    window.connect_delete_event(|_,_|{
         gtk::main_quit();
         Inhibit(false)
     });
-
-    window.connect_event(|_,e|{
-        println!("{:?}",e);
-        Inhibit(false)
-    });
-
+    
     gtk::main();
 }
