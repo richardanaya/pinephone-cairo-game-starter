@@ -48,7 +48,7 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
 
 pub fn run_game<T>(run: T)
 where
-    T: 'static + Fn(GameWindow, &Context, &Input),
+    T: 'static + Fn(GameWindow, &Context, &Input, f64),
 {
     if gtk::init().is_err() {
         println!("Failed to initialize GTK.");
@@ -81,6 +81,7 @@ where
             },
             ctx,
             &input2.borrow(),
+            1 as f64 / 60 as f64,
         );
         Inhibit(false)
     });

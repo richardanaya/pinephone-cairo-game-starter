@@ -12,7 +12,7 @@ fn main() {
     engine::load_resources();
     let game = Rc::new(RefCell::new(Game { x: 0.0, y: 0.0 }));
     let s = engine::image_from_resource("/app/ball.png");
-    engine::run_game(move |window, ctx, pointer| {
+    engine::run_game(move |window, ctx, pointer, delta_time| {
         let mut g = game.borrow_mut();
         if pointer.is_down {
             g.x = pointer.x;
