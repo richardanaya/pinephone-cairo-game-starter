@@ -1,4 +1,4 @@
-use cairo::{Context,ImageSurface,Format};
+use cairo::{Context,ImageSurface,Format,ImageSurfaceData};
 use gtk::prelude::*;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -26,12 +26,14 @@ pub fn load_resources(){
 pub fn image_from_resource(path:&str) -> ImageSurface{
     let pb = Pixbuf::from_resource(path).unwrap();
     let mut pixels = unsafe { pb.get_pixels().to_owned() };
-    let img = ImageSurface::create(if pb.get_has_alpha() { Format::ARgb32 } else { Format::Rgb24 },pb.get_width(),pb.get_height()).unwrap();
-    img.with_data(|d: &mut [u8]|{
-        for i in 0..d.len() {
-            d[i] = pixels[i];
+    let mut img = ImageSurface::create(if pb.get_has_alpha() { Format::ARgb32 } else { Format::Rgb24 },pb.get_width(),pb.get_height()).unwrap();
+    {
+        let mut d:ImageSurfaceData = img.get_data().unwrap();
+        let data = &mut d;
+        for i in 0..data.len() { 
+            data[i] = pixels[i];
         }
-    });
+    }
     img
 }
 
