@@ -64,12 +64,19 @@ fn main() {
         g.ball_y += g.ball_vel_y * delta_time;
         g.opponent_paddle_x = g.ball_x;
 
-        if g.ball_y < 50.0 || g.ball_y > window.height - 50.0 {
+        if g.ball_y < 50.0 || ( (g.ball_y > window.height - 50.0) && (g.ball_x>g.player_paddle_x-(img_paddle.get_width()/2) as f64 && g.ball_x<g.player_paddle_x+(img_paddle.get_width()/2) as f64)) {
             g.ball_vel_y *= -1.0;
         }
 
         if g.ball_x < 0.0 || g.ball_x > window.width {
             g.ball_vel_x *= -1.0;
+        }
+
+        if g.ball_y > window.height {
+            g.ball_x = window.width / 2.0;
+            g.ball_y = window.height / 2.0;
+            g.ball_vel_x = engine::random() * 400.0 - 200.0;
+            g.ball_vel_y = 200.0 * engine::random_sign();
         }
 
         clear_screen(ctx, 1.0, 1.0, 1.0);
