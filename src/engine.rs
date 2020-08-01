@@ -160,21 +160,6 @@ where
         Inhibit(false)
     });
 
-    let input5 = input.clone();
-    event_box.connect_motion_notify_event(move |_, e| {
-        let mut inp = input5.borrow_mut();
-        let pos = e.get_coords().unwrap();
-        inp.x = pos.0;
-        inp.y = pos.1;
-        Inhibit(false)
-    });
-
-    let input6 = input;
-    event_box.connect_event(move |_, e| {
-        println!("{:?}",e);
-        Inhibit(false)
-    });
-
     // show the window
     window.show_all();
 
