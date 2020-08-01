@@ -39,7 +39,7 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
     {
         let mut d: ImageSurfaceData = img.get_data().unwrap();
         let data = &mut d;
-        for i in 0..data.len() {
+        for i in 0..pixels.len() {
             data[i] = pixels[i];
         }
     }

@@ -21,14 +21,12 @@ fn clear_screen(ctx: &Context, r: f64, g: f64, b: f64) {
     ctx.paint();
 }
 
-fn draw_paddle(ctx: &Context, x: f64, y: f64, img: &ImageSurface) {
+fn draw_image_centered(ctx: &Context, x: f64, y: f64, img: &ImageSurface) {
+    ctx.save();
+    ctx.translate(x-(img.get_width()/2) as f64,y-(img.get_height()/2) as f64);
     ctx.set_source_surface(img, 0.0, 0.0);
     ctx.paint();
-}
-
-fn draw_ball(ctx: &Context, x: f64, y: f64, img: &ImageSurface) {
-    ctx.set_source_surface(img, 0.0, 0.0);
-    ctx.paint();
+    ctx.restore();
 }
 
 fn main() {
@@ -66,8 +64,8 @@ fn main() {
             g.player_paddle_x = pointer.x;
         }
 
-        draw_ball(ctx, g.ball_x, g.ball_y, &img_ball);
-        draw_paddle(ctx, g.opponent_paddle_x, g.opponent_paddle_y, &img_paddle);
-        draw_paddle(ctx, g.player_paddle_x, g.player_paddle_y, &img_paddle);
+        draw_image_centered(ctx, g.ball_x, g.ball_y, &img_ball);
+        draw_image_centered(ctx, g.opponent_paddle_x, g.opponent_paddle_y, &img_paddle);
+        draw_image_centered(ctx, g.player_paddle_x, g.player_paddle_y, &img_paddle);
     });
 }
