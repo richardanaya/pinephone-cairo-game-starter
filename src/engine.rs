@@ -61,6 +61,22 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
     img
 }
 
+pub fn clear(ctx: &Context, r: f64, g: f64, b: f64) {
+    ctx.set_source_rgb(r, g, b);
+    ctx.paint();
+}
+
+pub fn draw_image_centered(ctx: &Context, x: f64, y: f64, img: &ImageSurface) {
+    ctx.save();
+    ctx.translate(
+        x - (img.get_width() / 2) as f64,
+        y - (img.get_height() / 2) as f64,
+    );
+    ctx.set_source_surface(img, 0.0, 0.0);
+    ctx.paint();
+    ctx.restore();
+}
+
 pub fn run_game<T>(run: T)
 where
     T: 'static + Fn(GameWindow, &Context, &Input, f64),
