@@ -3,5 +3,6 @@
   <gresource prefix="/app">
     <file preprocess="xml-stripblanks">app.glade</file>
     <file>ball.png</file>
+    <file>paddle.png</file>
   </gresource>
 </gresources>
