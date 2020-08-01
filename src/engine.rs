@@ -166,7 +166,7 @@ where
     // don't maximize in debug (we assume debug is desktop)
     // on phone we should maximize
     #[cfg(not(debug_assertions))]
-    window.maximize();
+    window.fullscreen();
 
     let canvas2 = canvas;
     let tick = move || {

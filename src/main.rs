@@ -32,7 +32,6 @@ fn main() {
     let img_paddle = engine::image_from_resource("/app/paddle.png");
 
     engine::run_game(move |window, ctx, pointer, delta_time| {
-        println!("{} {}",window.width,window.height);
         let mut g = game.borrow_mut();
         if !g.init {
             g.opponent_paddle_x = window.width / 2.0;
