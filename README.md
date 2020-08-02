@@ -2,7 +2,7 @@
 
 This repo is a starter for creating a cairo based game in Rust for PinePhone
 
-If you like this project check out [`mochi`](https://github.com/richardanaya/mochi/), a game engine inspired by this work 
+If you like this project check out [`mochi`](https://github.com/richardanaya/mochi/), a game engine inspired by this work.
 
 ![](screenshots/screenshot1.jpg)
 ![](screenshots/screenshot0.png)
