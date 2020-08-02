@@ -482,6 +482,7 @@ name = "pinegame-cairo-game-starter"
 version = "0.1.0"
 dependencies = [
  "cairo-rs",
+ "gdk",
  "gdk-pixbuf",
  "gio",
  "glib",

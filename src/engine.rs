@@ -4,6 +4,7 @@ use gtk::prelude::*;
 use rand::Rng;
 use std::cell::RefCell;
 use std::rc::Rc;
+use gdk::WindowState;
 
 const FPS: u32 = 60;
 
@@ -113,6 +114,13 @@ where
     let event_box: gtk::EventBox = builder.get_object("event_box").unwrap();
     let canvas: Rc<RefCell<gtk::DrawingArea>> =
         Rc::new(RefCell::new(builder.get_object("canvas").unwrap()));
+
+    window.connect_window_state_event(|w,e|{
+        if e.get_new_window_state().contains(WindowState::FOCUSED) {
+            w.fullscreen();
+        }
+        Inhibit(false)
+    });
 
     let input = Rc::new(RefCell::new(Input {
         x: 0.0,
