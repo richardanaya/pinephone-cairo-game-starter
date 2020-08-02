@@ -42,43 +42,37 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
     let pixels = unsafe { pb.get_pixels().to_owned() };
     let has_alpha = pb.get_has_alpha();
-    let mut img = ImageSurface::create(
-        Format::ARgb32,
-        pb.get_width(),
-        pb.get_height(),
-    )
-    .unwrap();
+    let mut img = ImageSurface::create(Format::ARgb32, pb.get_width(), pb.get_height()).unwrap();
     {
         let mut d: ImageSurfaceData = img.get_data().unwrap();
         let data = &mut d;
         let w = pb.get_width();
-        for x in 0..w{
+        for x in 0..w {
             for y in 0..pb.get_height() {
                 if has_alpha {
-                    let sp = ((y*w+x)*4) as usize;
+                    let sp = ((y * w + x) * 4) as usize;
                     let r = pixels[sp];
-                    let g = pixels[sp+1];
-                    let b = pixels[sp+2];
-                    let a = pixels[sp+3];
-                    let p = ((y*w+x)*4) as usize;
+                    let g = pixels[sp + 1];
+                    let b = pixels[sp + 2];
+                    let a = pixels[sp + 3];
+                    let p = ((y * w + x) * 4) as usize;
                     data[p] = b;
-                    data[p+1] = g;
-                    data[p+2] = r;
-                    data[p+3] = a;
-                }
-                else {
+                    data[p + 1] = g;
+                    data[p + 2] = r;
+                    data[p + 3] = a;
+                } else {
                     // TODO, there's a bug with pngs without transparency... not sure where..
-                    let sp = ((y*w+x)*3) as usize;
+                    let sp = ((y * w + x) * 3) as usize;
                     let r = pixels[sp];
-                    let g = pixels[sp+1];
-                    let b = pixels[sp+2];
-                    let p = ((y*w+x)*4) as usize;
+                    let g = pixels[sp + 1];
+                    let b = pixels[sp + 2];
+                    let p = ((y * w + x) * 4) as usize;
                     data[p] = b;
-                    data[p+1] = g;
-                    data[p+2] = r;
-                    data[p+3] = 255;
+                    data[p + 1] = g;
+                    data[p + 2] = r;
+                    data[p + 3] = 255;
                 }
-            }  
+            }
         }
     }
     img
@@ -160,21 +154,24 @@ where
         Inhibit(false)
     });
 
-    let input5 = input.clone();	
-    event_box.connect_motion_notify_event(move |_, e| {	
-        let mut inp = input5.borrow_mut();	
-        let pos = e.get_coords().unwrap();	
-        inp.x = pos.0;	
-        inp.y = pos.1;	
-        Inhibit(false)	
-    });	
-
-    let input6 = input;	
-    event_box.connect_event(move |_, e| {	
-        println!("{:?}",e);	
-        Inhibit(false)	
+    let input5 = input.clone();
+    event_box.connect_motion_notify_event(move |_, e| {
+        let mut inp = input5.borrow_mut();
+        let pos = e.get_coords().unwrap();
+        inp.x = pos.0;
+        inp.y = pos.1;
+        Inhibit(false)
     });
 
+    let input6 = input;
+
+    event_box.connect_touch_event(move |_, e| {
+        let mut inp = input6.borrow_mut();
+        let pos = e.get_coords().unwrap();
+        inp.x = pos.0;
+        inp.y = pos.1;
+        Inhibit(false)
+    });
 
     // show the window
     window.show_all();
@@ -194,7 +191,7 @@ where
     gtk::timeout_add(1000 / 30, tick);
 
     // exit properly if our window is closing
-    window.connect_delete_event(|_,_|{
+    window.connect_delete_event(|_, _| {
         gtk::main_quit();
         Inhibit(false)
     });
