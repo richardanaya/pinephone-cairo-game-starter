@@ -5,6 +5,8 @@ use rand::Rng;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+const FPS: u32 = 60;
+
 pub struct GameWindow {
     pub width: f64,
     pub height: f64,
@@ -129,7 +131,7 @@ where
             },
             ctx,
             &input2.borrow(),
-            1_f64 / 30_f64,
+            1_f64 / FPS as f64,
         );
         Inhibit(false)
     });
@@ -188,7 +190,7 @@ where
     };
 
     // executes the game every 30 seconds
-    gtk::timeout_add(1000 / 30, tick);
+    gtk::timeout_add(1000 / FPS, tick);
 
     // exit properly if our window is closing
     window.connect_delete_event(|_, _| {
